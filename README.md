@@ -121,8 +121,8 @@ VITE_BACKEND_URL=http://localhost:4000
 | POST | `/api/order/delete` | Delete order (admin) |
 
 ## 📸 Screenshots
+<img width="1622" height="802" alt="image" src="https://github.com/user-attachments/assets/38a5943d-9dc6-44d2-ae40-5bfd2b524188" />
 
-> Add screenshots of Home, Cart, My Orders, and Admin panel here after capturing them.
 
 ## 👤 Author
 
