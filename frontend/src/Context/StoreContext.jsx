@@ -5,9 +5,10 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
-    const url = "https://food-del-backendd-sw5b.onrender.com";
+    const url = import.meta.env.VITE_BACKEND_URL || "https://food-del-backendd-sw5b.onrender.com";
     const [token,setToken] = useState("");
     const [food_list,setFoodList] = useState([])
+    const [search,setSearch] = useState("");
 
     const addToCart = async (itemId) => {
         if ( !cartItems[itemId] ) {
@@ -31,18 +32,30 @@ const StoreContextProvider = (props) => {
         for(const item in cartItems){
             if(cartItems[item] > 0 ){
                 let itemInfo = food_list.find( (product) => product._id === item );
-                totalAmount += itemInfo.price*cartItems[item];
+                if(itemInfo){
+                    totalAmount += itemInfo.price*cartItems[item];
+                }
             }
         }
         return totalAmount;
     }
     const fetchFoodList = async () => {
-        const response = await axios.get(url+"/api/food/list")
-        setFoodList(response.data.data)
+        try {
+            const response = await axios.get(url+"/api/food/list")
+            if(response.data.success){
+                setFoodList(response.data.data || [])
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     const loadCartData = async (token) => {
-        const response = await axios.post(url+"/api/cart/get",{},{headers:{token}})
-        setCartItems(response.data.cartData)
+        try {
+            const response = await axios.post(url+"/api/cart/get",{},{headers:{token}})
+            setCartItems(response.data.cartData || {})
+        } catch (error) {
+            setCartItems({})
+        }
     }
     useEffect(() => {
         async function loadData(){
@@ -53,6 +66,21 @@ const StoreContextProvider = (props) => {
             }
         }
         loadData();
+
+        const interval = setInterval(fetchFoodList, 5000);
+        const onVisible = () => {
+            if (document.visibilityState === "visible") {
+                fetchFoodList();
+            }
+        };
+        document.addEventListener("visibilitychange", onVisible);
+        window.addEventListener("focus", fetchFoodList);
+
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener("visibilitychange", onVisible);
+            window.removeEventListener("focus", fetchFoodList);
+        };
     },[])
 
     const contextValue = {
@@ -64,7 +92,11 @@ const StoreContextProvider = (props) => {
         getTotalCartAmount,
         url,
         setToken,
-        token
+        token,
+        search,
+        setSearch,
+        fetchFoodList,
+        loadCartData
     }
     return (
         <StoreContext.Provider value={contextValue}>

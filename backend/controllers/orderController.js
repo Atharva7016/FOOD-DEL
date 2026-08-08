@@ -8,11 +8,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //~ placing user order for frontend:
 const placeOrder = async (req,res) => {
-    const frontend_url = "https://food-del-frontend-tdik.onrender.com";
+    const frontend_url = process.env.FRONTEND_URL || "https://food-del-frontend-tdik.onrender.com";
     try {
         const newOrder = new orderModel({
             userId:req.body.userId,
-            item:req.body.items,
+            items:req.body.items,
             amount:req.body.amount,
             address:req.body.address
         })
@@ -104,4 +104,20 @@ const  updateStatus = async (req,res) => {
     }
 }
 
+<<<<<<< HEAD
 export {placeOrder, verifyOrder, userOrders, listOrders, updateStatus};
+=======
+//~ api for deleting order:
+
+const deleteOrder = async (req,res) => {
+    try {
+        await orderModel.findByIdAndDelete(req.body.orderId);
+        res.json({success:true, message:"Order deleted"})
+    } catch (error) {
+        console.log(error);
+        res.json({success:false, message:"error"})
+    }
+}
+
+export {placeOrder, verifyOrder, userOrders, listOrders, updateStatus, deleteOrder};
+>>>>>>> f272fc3 (Add admin auth, past orders, search, and production API URLs.)

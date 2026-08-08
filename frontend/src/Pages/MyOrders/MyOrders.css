@@ -1,6 +1,27 @@
 .my-orders{
     margin: 50px 0px;
 }
+.my-orders-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.past-orders-link{
+    color: tomato;
+    font-weight: 500;
+    border: 1px solid tomato;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+.past-orders-link:hover{
+    background-color: #fff4f2;
+}
+.orders-empty{
+    color: #747474;
+    margin-top: 20px;
+}
 .my-orders .container{
     display: flex;
     flex-direction: column;

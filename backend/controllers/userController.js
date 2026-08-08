@@ -36,7 +36,7 @@ const loginUser = async (req,res) => {
 //~ Register user:
 
 const registerUser = async (req,res) => {
-    const {name, password, email} = req.body;
+    const {name, password, email, phone} = req.body;
     try {
         //! checking is user already exists:
         const exists = await userModel.findOne({email});
@@ -47,6 +47,15 @@ const registerUser = async (req,res) => {
         //! validating email format and strong password:
         if(!validator.isEmail(email)){
             return res.json({success:false, message:"please enter a valid email"})
+        }
+
+        if(!phone || !/^\d{10}$/.test(String(phone))){
+            return res.json({success:false, message:"please enter a valid 10 digit phone number"})
+        }
+
+        const phoneExists = await userModel.findOne({phone});
+        if (phoneExists) {
+            return res.json({success:false, message:"phone number already registered"})
         }
 
         if(password.length < 8){
@@ -60,6 +69,7 @@ const registerUser = async (req,res) => {
         const newUser = new userModel({
             name:name,
             email: email,
+            phone: phone,
             password: hashedPassword
         })
 

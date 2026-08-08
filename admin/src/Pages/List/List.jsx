@@ -2,32 +2,52 @@ import React, { useState, useEffect } from 'react'
 import "./List.css"
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
-const List = ({url}) => {
+const List = ({url, token}) => {
   const [list, setList] = useState([]);
+  const location = useLocation();
+
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/food/list`);
-    if(response.data.success) {
-      setList(response.data.data)
-    }
-    else{
+    try {
+      const response = await axios.get(`${url}/api/food/list`);
+      if(response.data.success) {
+        setList(response.data.data || [])
+      }
+      else{
+        toast.error("Error")
+      }
+    } catch (error) {
       toast.error("Error")
     }
   }
   const removeFood = async (foodId) => {
-    const response = await axios.post(`${url}/api/food/remove`, {id:foodId});
-    await fetchList();
+    const response = await axios.post(`${url}/api/food/remove`, {id:foodId}, {headers:{token}});
     if(response.data.success){
       toast.success(response.data.message)
+      setList((prev) => prev.filter((item) => item._id !== foodId))
     }
     else{
-      toast.error("error")
+      toast.error(response.data.message || "error")
     }
   }
 
   useEffect(() => {
-    fetchList()
-  },[])
+    fetchList();
+    const interval = setInterval(fetchList, 5000);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        fetchList();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", fetchList);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", fetchList);
+    };
+  }, [location.pathname])
 
   return (
     <div className='list add flex-col'>
@@ -42,7 +62,7 @@ const List = ({url}) => {
         </div>
         { list.map((item,index) => {
           return(
-            <div key={index} className='list-table-format'>
+            <div key={item._id || index} className='list-table-format'>
               <img src={`${url}/images/` + item.image} alt="" />
               <p>{item.name}</p>
               <p>{item.category}</p>

@@ -1,6 +1,6 @@
 .order-item{
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 0.8fr;
     align-items: start;
     gap: 30px;
     border: 1px solid tomato;
@@ -26,6 +26,19 @@
     padding: 10px;
     outline: none;
 }
+.order-delete-btn{
+    background-color: tomato;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: max(10vw,90px);
+}
+.order-delete-btn:hover{
+    background-color: #e0452f;
+}
 @media(max-width:1000px){
     .order-item{
         font-size: 12px;
@@ -38,5 +51,9 @@
     }
     .order-item img{
         width: 40px;
+    }
+    .order-delete-btn{
+        padding: 8px 12px;
+        font-size: 12px;
     }
 }

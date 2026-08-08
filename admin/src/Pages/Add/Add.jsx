@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import "./Add.css";
 import { assets } from "../../assets/assets";
 import axios from "axios"
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const Add = ({url}) => {
+const Add = ({url, token}) => {
+  const navigate = useNavigate();
   const [image, setImage] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -17,15 +19,32 @@ const Add = ({url}) => {
     const value = event.target.value;
     setData( data => ( {...data, [name]:value} ) )
   }
+  const onImageChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const isJpeg = file.type === "image/jpeg" || file.type === "image/jpg";
+    const name = file.name.toLowerCase();
+    if (!isJpeg || (!name.endsWith(".jpg") && !name.endsWith(".jpeg"))) {
+      toast.error("Only JPG or JPEG images are allowed");
+      event.target.value = "";
+      setImage(false);
+      return;
+    }
+    setImage(file);
+  }
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    if (!image) {
+      toast.error("Please upload a JPG or JPEG image");
+      return;
+    }
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("price",Number(data.price));
     formData.append("category", data.category);
     formData.append("image",image);
-    const response = await axios.post(`${url}/api/food/add`, formData);
+    const response = await axios.post(`${url}/api/food/add`, formData, {headers:{token}});
     if(response.data.success){
       setData({
         name: "",
@@ -35,6 +54,7 @@ const Add = ({url}) => {
       })
       setImage(false);
       toast.success(response.data.message)
+      navigate("/list")
     }
     else{
       toast.error(response.data.message)
@@ -44,11 +64,11 @@ const Add = ({url}) => {
     <div className='add'>
       <form className='flex-col' onSubmit={onSubmitHandler}>
         <div className='add-img-upload flex-col'>
-          <p>Upload Image</p>
+          <p>Upload Image (JPG / JPEG only)</p>
           <label htmlFor="image">
             <img src={ image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
           </label>
-          <input onChange={ (e) => setImage(e.target.files[0]) } type="file" id='image' hidden required />
+          <input onChange={onImageChange} type="file" id='image' accept=".jpg,.jpeg,image/jpeg" hidden required />
         </div>
         <div className='add-product-name flex-col'>
           <p>Product name</p>

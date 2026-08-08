@@ -11,3 +11,10 @@
     gap: 30px;
     row-gap: 50px;
 }
+
+.food-display-no-results{
+    margin-top: 30px;
+    color: #49557e;
+    font-size: 18px;
+    text-align: center;
+}

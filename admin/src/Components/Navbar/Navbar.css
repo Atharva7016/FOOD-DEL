@@ -10,3 +10,20 @@
 .navbar .profile{
     width: 40px;
 }
+.navbar-right{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.navbar-right button{
+    background: transparent;
+    border: 1px solid tomato;
+    color: #49557e;
+    padding: 8px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.navbar-right button:hover{
+    background-color: #fff4f2;
+}
