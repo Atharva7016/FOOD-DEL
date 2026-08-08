@@ -12,10 +12,9 @@ A full-stack food delivery web application with a customer storefront, admin pan
 - Checkout with delivery details
 - Stripe payment integration
 - Active orders + Past (delivered) orders
-- Admin login shortcut from the customer sign-in popup
 
 ### Admin Panel
-- Secure admin login
+- Secure admin login (separate admin app)
 - Add / list / remove food items (JPG/JPEG only)
 - Manage active orders & past orders
 - Update order status (Processing → Out for delivery → Delivered)
@@ -47,14 +46,9 @@ FOOD-DEL/
 | App | URL |
 |-----|-----|
 | Customer | [food-del-frontend-tdik.onrender.com](https://food-del-frontend-tdik.onrender.com) |
-| Admin | [food-del-admin-aud7.onrender.com](https://food-del-admin-aud7.onrender.com) |
 | Backend API | [food-del-backendd-sw5b.onrender.com](https://food-del-backendd-sw5b.onrender.com) |
 
-### Demo Admin Login
-- **Email:** `admin@tomato.com`
-- **Password:** `admin123456`
-
-> You can also open the customer site → **sign in** → **Admin Login**.
+> Admin panel is private (not linked publicly). Use the separate admin deploy URL and credentials from your local `.env`.
 
 ## 🚀 Getting Started (Local)
 
@@ -69,13 +63,13 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in `backend/`:
+Create a `.env` file in `backend/` (this file is gitignored):
 ```env
 PORT=4000
 JWT_SECRET=your_jwt_secret
 STRIPE_SECRET_KEY=your_stripe_secret
-ADMIN_EMAIL=admin@tomato.com
-ADMIN_PASSWORD=admin123456
+ADMIN_EMAIL=your_admin_email
+ADMIN_PASSWORD=your_admin_password
 FRONTEND_URL=http://localhost:5173
 ```
 
