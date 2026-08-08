@@ -104,9 +104,6 @@ const  updateStatus = async (req,res) => {
     }
 }
 
-<<<<<<< HEAD
-export {placeOrder, verifyOrder, userOrders, listOrders, updateStatus};
-=======
 //~ api for deleting order:
 
 const deleteOrder = async (req,res) => {
@@ -120,4 +117,3 @@ const deleteOrder = async (req,res) => {
 }
 
 export {placeOrder, verifyOrder, userOrders, listOrders, updateStatus, deleteOrder};
->>>>>>> f272fc3 (Add admin auth, past orders, search, and production API URLs.)
